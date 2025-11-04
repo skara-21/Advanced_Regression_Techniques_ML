@@ -1,12 +1,12 @@
 # 🏠 House Price Prediction
 
-პროექტის მიზანია საცხოვრებელი სახლების ფასის პროგნოზირება სხვადასხვა რეგრესიაზე დაფუძნებული მოდელების გამოყენებით. გამოყენებულია Sklearn, XGBoost, Feature Engineering, და MLflow მოდელის ტრენინგისთვის, ხოლო Dagshub გამოიყენება როგორც პლატფორმა მოდელების ვერსიირებისა და ლოგირებისათვის.
+The goal of this project is to predict residential house prices using various regression-based models. The project utilizes Sklearn, XGBoost, Feature Engineering, and MLflow for model training, while Dagshub is used as a platform for model versioning and logging.
 
-## პროექტის სტრუქტურა
+## Project Structure
 
 - `model_experiment.ipynb`  
-  - ძირითადი ფაილი.
-  - შეიცავს შემდეგ დანაყოფებს
+  - Main file.
+  - Contains the following sections:
     - **Data Cleaning**
     - **Feature Selection**
     - **Feature Engineering**
@@ -15,19 +15,16 @@
     - **Result saving**
 
 - `model_inference.ipynb`  
-  - წინა ფაილის ბოლოს შევინახე როგორც მოდელი, ისე დამუშავებული მონაცემები.
-  - ამ ფაილში **Model Registry**-დან დავა-Load-ე მოდელი
-  - შემოვიტანე დამუშავებული მონაცამები და გავაკეთე პროგნოზი.
-  - საბოლოო პროგნოზს მივეცი competition-ისთვის შესაფერისი სახე და ავტვირთე.
-  - **შედეგი 0.13371**
+  - At the end of the previous file, I saved both the model and processed data.
+  - In this file, I loaded the model from **Model Registry**
+  - Imported the processed data and made predictions.
+  - Formatted the final predictions for competition submission and uploaded them.
+  - **Result: 0.13371**
 
 - `README.md`  
-  - შეიცავს პროექტის მოკლე მიმოხილვას
+  - Contains a brief overview of the project
 
-
-
-
-## გამოყენებული ტექნოლოგიები
+## Technologies Used
 
 - pandas, numpy
 - scikit-learn
@@ -35,9 +32,9 @@
 - MLflow
 - Dagshub
 
-## მოდელები
+## Models
 
-შედარებული იქნა შემდეგი რეგრესიული მოდელები:
+The following regression models were compared:
 
 - Linear Regression
 - Ridge Regression
@@ -45,11 +42,11 @@
 - Random Forest
 - XGBoost
 
-შეფასება მოხდა `R2 Score`-ის და `RMSLE`-ის მიხედვით Cross-Validation-ით (KFold).
+Evaluation was performed using `R2 Score` and `RMSLE` with Cross-Validation (KFold).
 
 ## Model Evaluation
 
-საუკეთესო შედეგი აჩვენა **XGBoost** მოდელმა, თუმცა სხვა მოდელებმაც დაადასტურეს სტაბილური შედეგები. შეფასება ხორციელდება როგორც Cross-Validation-ზე, ასევე Validation სეტზე.
+The best results were achieved by the **XGBoost** model, although other models also demonstrated stable performance. Evaluation is conducted on both Cross-Validation and Validation sets.
 
 ### Evaluation Metrics:
 - R² Score
@@ -59,24 +56,24 @@
 - F-statistic
 
 ## Feature Engineering/Selection
-- პირველ რიგში გადავუყევი მონაცემებს და წავშალე ის სვეტები რომლებიც 80%-ზე მეტ NaN მნიშვნელობებს შეიცავდა
-- ამის შემდეგ შევავსე დარჩენილ სვეტებში NaN მნიშვნელობები შესაბამისი მონაცემით (კონკრეტული სვეტის მოდით)
-- ამის შემდეგ მონაცემებს მოვაშორე outlier-ები, რადგან ვიცით რომ მსგავსი წერტილები დიდ გავლენას ახდენს წრფივ მოდელებზე
-- შემდეგ, ამოვიღე ისეთი სვეტები რომლეიბიც 97% ერთი და იგივე მნიშვნელობებს შეიცავდა, რადგან მათი არსებობით ღირებულ ინფორმაციას ვერ ვიღებდით.
-- მთავარი გამოწვევა იყო object ტიპის მონაცემების რიცხვითში გადაყვანა. ამისთვის გამოვიყენე **WOEEncoder** და სხვადასხვანაირად გადავიყვანე ბინარული (ორი განსხვავებული მნიშვნელობის მქონე) და არაბინარული სვეტები რიცხვით მონაცემებში
-- ბოლოს კი მოვძებნე ისეთი სვეტები რომლებიც ძალიან კორელირებული იყო ერთმანეთთან და ერთ-ერთ გადავაგდე, საბოლოო მონაცემების რაოდენობის შესამცირებლად.
+- First, I reviewed the data and removed columns that contained more than 80% NaN values
+- Then, I filled the remaining NaN values in columns with appropriate data (mode of the specific column)
+- Next, I removed outliers from the data, as we know that such points have a significant impact on linear models
+- Then, I removed columns that contained 97% identical values, as they wouldn't provide valuable information
+- The main challenge was converting object-type data to numerical format. For this, I used **WOEEncoder** and converted binary (columns with two distinct values) and non-binary columns to numerical data in different ways
+- Finally, I identified columns that were highly correlated with each other and removed one of them to reduce the final feature count.
 
 ## Training
-- ამ ეტაპზე დავტესტე 5 მოდელი:
+- At this stage, I tested 5 models:
     - **LinearRegression**
     - **RandomForest**
     - **XGBoost**
     - **Lasso**
     - **Ridge**
-- Hyperparameter ოპტიმიზაციისთვის გამოვიყენე **KFold**-ის და **GridSearchCV**-ის კომბინაცია
-- ზემოთ ვახსენე რა პარამეტრებს ვაქცევდი ყურადღებას, შესაბამისად საბოლოო მოდელი ავარჩიე ამ პარამეტრებზე დაყრდნობით
+- For hyperparameter optimization, I used a combination of **KFold** and **GridSearchCV**
+- As mentioned above regarding the parameters I focused on, I selected the final model based on these parameters
 
-## MLFow Tracking
+## MLflow Tracking
 | Model           | Training R² | Validation R² | Validation RMSE | MAE       | MSLE   | F-statistic | p-value | MLflow Run |
 |-----------------|-------------|---------------|------------------|-----------|--------|-------------|---------|------------|
 | [LinearRegression](https://dagshub.com/skara-21/Assignment1_ARD.mlflow/#/experiments/0/runs/f157cbfec6064388be772ef3f80880e1) | 0.8625      | 0.8390        | 35136.9262       | 20857.5339 | 0.0260 | 108.09      | 0.0000  | 🔗 |
@@ -85,6 +82,4 @@
 | [Lasso](https://dagshub.com/skara-21/Assignment1_ARD.mlflow/#/experiments/0/runs/2c63b09143b64228be186facb2bd63ce) | 0.8625      | 0.8393        | 35112.4377       | 20832.8629 | 0.0259 | 108.09      | 0.0000  | 🔗 |
 | [Ridge](https://dagshub.com/skara-21/Assignment1_ARD.mlflow/#/experiments/0/runs/fcf2dc41f19445fd9151a45e5513c960) | 0.8621      | 0.8399        | 35038.1316       | 20721.6985 | 0.0258 | 107.74      | 0.0000  | 🔗 |
 
-
-
-## საუკეთესო მოდელი **XGBoost**
+## Best Model: **XGBoost**
